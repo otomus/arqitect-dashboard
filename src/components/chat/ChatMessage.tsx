@@ -17,14 +17,14 @@ function ChatMessageRaw({ message }: Props) {
   return (
     <div
       className={`max-w-[85%] rounded-lg text-[13px] leading-relaxed animate-[fade-in_0.3s_ease] break-words ${
-        isUser
-          ? "self-end rounded-br-sm"
-          : "self-start rounded-bl-sm"
+        isUser ? "self-end rounded-br-sm" : "self-start rounded-bl-sm"
       }`}
       style={{
         padding: "10px 14px",
         background: isUser ? "rgba(80, 50, 160, 0.35)" : "rgba(0, 0, 0, 0.35)",
-        border: isUser ? "1px solid rgba(167, 139, 250, 0.25)" : "1px solid rgba(255, 255, 255, 0.08)",
+        border: isUser
+          ? "1px solid rgba(167, 139, 250, 0.25)"
+          : "1px solid rgba(255, 255, 255, 0.08)",
       }}
     >
       <div
@@ -35,7 +35,10 @@ function ChatMessageRaw({ message }: Props) {
       </div>
 
       {/* Text content */}
-      <div style={{ color: "rgba(255, 255, 255, 0.88)" }} className="[&_strong]:text-white [&_em]:italic [&_code]:bg-white/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-xs">
+      <div
+        style={{ color: "rgba(255, 255, 255, 0.88)" }}
+        className="[&_strong]:text-white [&_em]:italic [&_code]:bg-white/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-xs"
+      >
         {envelope?.content.markdown ? (
           <ReactMarkdown>{message.text}</ReactMarkdown>
         ) : (
@@ -90,7 +93,9 @@ function ChatMessageRaw({ message }: Props) {
         </div>
       )}
 
-      <div className="text-[9px] mt-1 text-right" style={{ color: "rgba(255, 255, 255, 0.3)" }}>{time}</div>
+      <div className="text-[9px] mt-1 text-right" style={{ color: "rgba(255, 255, 255, 0.3)" }}>
+        {time}
+      </div>
     </div>
   );
 }

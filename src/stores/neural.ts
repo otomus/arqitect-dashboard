@@ -9,7 +9,15 @@ export interface NeuralEvent {
   timestamp: number;
 }
 
-export type DreamStage = "qualifying" | "qualified" | "qualification_failed" | "reconciling" | "pruning" | "finetuning" | "personality_reflection" | null;
+export type DreamStage =
+  | "qualifying"
+  | "qualified"
+  | "qualification_failed"
+  | "reconciling"
+  | "pruning"
+  | "finetuning"
+  | "personality_reflection"
+  | null;
 
 interface NeuralStore {
   nerves: NerveStatus[];
@@ -62,5 +70,6 @@ export const useNeuralStore = create<NeuralStore>((set) => ({
   setSelectedNerveDetails: (details) => set({ selectedNerveDetails: details }),
   setDetailsLoading: (loading) => set({ detailsLoading: loading }),
   setBrainState: (brainState) => set({ brainState }),
-  setDream: (stage, nerve = null, message = null) => set({ dreamStage: stage, dreamNerve: nerve, dreamMessage: message }),
+  setDream: (stage, nerve = null, message = null) =>
+    set({ dreamStage: stage, dreamNerve: nerve, dreamMessage: message }),
 }));

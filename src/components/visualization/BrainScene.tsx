@@ -25,12 +25,7 @@ export function BrainScene() {
           <AmbientParticles count={200} />
 
           <EffectComposer>
-            <Bloom
-              intensity={0.6}
-              luminanceThreshold={0.4}
-              luminanceSmoothing={0.9}
-              mipmapBlur
-            />
+            <Bloom intensity={0.6} luminanceThreshold={0.4} luminanceSmoothing={0.9} mipmapBlur />
           </EffectComposer>
         </Suspense>
       </Canvas>

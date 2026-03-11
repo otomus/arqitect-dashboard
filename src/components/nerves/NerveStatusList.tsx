@@ -6,7 +6,11 @@ import type { NerveStatus } from "@otomus/sentient-sdk";
 function NerveCardRaw({ nerve }: { nerve: NerveStatus }) {
   const scorePercent = Math.round(nerve.score * 100);
   const scoreClass =
-    scorePercent >= 70 ? "bg-[var(--green)]" : scorePercent >= 40 ? "bg-[var(--yellow)]" : "bg-[var(--fire)]";
+    scorePercent >= 70
+      ? "bg-[var(--green)]"
+      : scorePercent >= 40
+        ? "bg-[var(--yellow)]"
+        : "bg-[var(--fire)]";
   const dotClass =
     nerve.status === "pass"
       ? "bg-[var(--green)] shadow-[0_0_4px_var(--green-glow)]"
@@ -47,9 +51,7 @@ function NerveCardRaw({ nerve }: { nerve: NerveStatus }) {
       </div>
 
       {nerve.tools.length > 0 && (
-        <div className="text-[9px] text-[var(--dim)] mt-1 truncate">
-          {nerve.tools.join(", ")}
-        </div>
+        <div className="text-[9px] text-[var(--dim)] mt-1 truncate">{nerve.tools.join(", ")}</div>
       )}
     </div>
   );

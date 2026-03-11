@@ -93,8 +93,16 @@ export function NervesPanel({ open, onClose }: NervesPanelProps) {
             onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.8)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="2" y1="2" x2="12" y2="12" /><line x1="12" y1="2" x2="2" y2="12" />
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <line x1="2" y1="2" x2="12" y2="12" />
+              <line x1="12" y1="2" x2="2" y2="12" />
             </svg>
           </button>
         </div>
@@ -146,7 +154,14 @@ export function NervesPanel({ open, onClose }: NervesPanelProps) {
         {/* Nerve list */}
         <div className="flex-1 overflow-y-auto" style={{ padding: "8px 16px" }}>
           {filtered.length === 0 && (
-            <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, textAlign: "center", padding: "32px 0" }}>
+            <div
+              style={{
+                color: "rgba(255,255,255,0.3)",
+                fontSize: 12,
+                textAlign: "center",
+                padding: "32px 0",
+              }}
+            >
               No nerves found
             </div>
           )}
@@ -164,10 +179,13 @@ function NerveRow({ nerve, onClick }: { nerve: NerveStatus; onClick: () => void 
   const scorePercent = scoreRaw > 1 ? Math.round(scoreRaw) : Math.round(scoreRaw * 100);
   const scoreColor = scorePercent >= 70 ? "#5bf5a0" : scorePercent >= 40 ? "#f5d05b" : "#f55b5b";
   const statusColor =
-    nerve.status === "pass" ? "#5bf5a0"
-    : nerve.status === "fail" ? "#f55b5b"
-    : nerve.status === "testing" ? "#f5d05b"
-    : "rgba(255,255,255,0.3)";
+    nerve.status === "pass"
+      ? "#5bf5a0"
+      : nerve.status === "fail"
+        ? "#f55b5b"
+        : nerve.status === "testing"
+          ? "#f5d05b"
+          : "rgba(255,255,255,0.3)";
 
   return (
     <div
@@ -196,37 +214,49 @@ function NerveRow({ nerve, onClick }: { nerve: NerveStatus; onClick: () => void 
             style={{
               background: statusColor,
               boxShadow: `0 0 6px ${statusColor}`,
-              animation: nerve.status === "testing" ? "pulse-dot 1.5s ease-in-out infinite" : "none",
+              animation:
+                nerve.status === "testing" ? "pulse-dot 1.5s ease-in-out infinite" : "none",
             }}
           />
-          <span style={{
-            color: "rgba(255,255,255,0.85)",
-            fontSize: 12,
-            fontWeight: 600,
-            fontFamily: "SF Mono, Fira Code, monospace",
-          }}>
+          <span
+            style={{
+              color: "rgba(255,255,255,0.85)",
+              fontSize: 12,
+              fontWeight: 600,
+              fontFamily: "SF Mono, Fira Code, monospace",
+            }}
+          >
             {nerve.name}
           </span>
         </div>
-        <span style={{ color: scoreColor, fontSize: 13, fontWeight: 800 }}>
-          {scorePercent}%
-        </span>
+        <span style={{ color: scoreColor, fontSize: 13, fontWeight: 800 }}>{scorePercent}%</span>
       </div>
 
       {/* Score bar */}
       <div style={{ height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 2 }}>
-        <div style={{
-          height: "100%",
-          width: `${Math.min(scorePercent, 100)}%`,
-          background: scoreColor,
-          borderRadius: 2,
-          transition: "width 0.5s",
-        }} />
+        <div
+          style={{
+            height: "100%",
+            width: `${Math.min(scorePercent, 100)}%`,
+            background: scoreColor,
+            borderRadius: 2,
+            transition: "width 0.5s",
+          }}
+        />
       </div>
 
       {/* Tools */}
       {nerve.tools.length > 0 && (
-        <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div
+          style={{
+            color: "rgba(255,255,255,0.3)",
+            fontSize: 10,
+            marginTop: 6,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
           {nerve.tools.join(" · ")}
         </div>
       )}

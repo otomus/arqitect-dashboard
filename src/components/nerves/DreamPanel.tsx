@@ -23,7 +23,7 @@ export function DreamPanel() {
   if (!dreamStage && testingNerves.length === 0) return null;
 
   const info = dreamStage
-    ? (stageLabels[dreamStage] || { label: dreamStage.toUpperCase(), color: "#a78bfa" })
+    ? stageLabels[dreamStage] || { label: dreamStage.toUpperCase(), color: "#a78bfa" }
     : { label: "QUALIFYING", color: "#f5d05b" };
 
   return (
@@ -76,10 +76,25 @@ export function DreamPanel() {
         {/* Current nerve being tuned */}
         {dreamNerve && (
           <div className="flex items-center gap-2" style={{ marginBottom: dreamMessage ? 10 : 0 }}>
-            <span style={{ color: "rgba(255,255,255,0.45)", fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>
+            <span
+              style={{
+                color: "rgba(255,255,255,0.45)",
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
               Nerve
             </span>
-            <span style={{ color: info.color, fontSize: 13, fontWeight: 700, fontFamily: "SF Mono, Fira Code, monospace" }}>
+            <span
+              style={{
+                color: info.color,
+                fontSize: 13,
+                fontWeight: 700,
+                fontFamily: "SF Mono, Fira Code, monospace",
+              }}
+            >
               {dreamNerve}
             </span>
           </div>
@@ -87,7 +102,14 @@ export function DreamPanel() {
 
         {/* Message */}
         {dreamMessage && (
-          <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, lineHeight: 1.5, marginBottom: testingNerves.length > 0 ? 12 : 0 }}>
+          <div
+            style={{
+              color: "rgba(255,255,255,0.6)",
+              fontSize: 12,
+              lineHeight: 1.5,
+              marginBottom: testingNerves.length > 0 ? 12 : 0,
+            }}
+          >
             {dreamMessage}
           </div>
         )}
@@ -97,14 +119,21 @@ export function DreamPanel() {
           <div className="flex flex-col gap-2">
             {testingNerves.map((nerve) => {
               const scoreVal = nerve.score > 1 ? nerve.score : Math.round(nerve.score * 100);
-              const progressPct = nerve.max_iterations > 0
-                ? Math.round((nerve.iteration / nerve.max_iterations) * 100)
-                : 0;
+              const progressPct =
+                nerve.max_iterations > 0
+                  ? Math.round((nerve.iteration / nerve.max_iterations) * 100)
+                  : 0;
 
               return (
                 <div key={nerve.name}>
                   <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
-                    <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 11, fontFamily: "SF Mono, Fira Code, monospace" }}>
+                    <span
+                      style={{
+                        color: "rgba(255,255,255,0.7)",
+                        fontSize: 11,
+                        fontFamily: "SF Mono, Fira Code, monospace",
+                      }}
+                    >
                       {nerve.name}
                     </span>
                     <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 10 }}>

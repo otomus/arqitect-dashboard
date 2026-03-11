@@ -87,9 +87,15 @@ export function FloatingChat() {
 
   // Unread count when closed
   const [lastSeenCount, setLastSeenCount] = useState(0);
+  const prevOpenRef = useRef(open);
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    if (open) setLastSeenCount(messages.length);
-  }, [open, messages.length]);
+    if (open && !prevOpenRef.current) {
+      setLastSeenCount(messages.length);
+    }
+    prevOpenRef.current = open;
+  });
+  /* eslint-enable react-hooks/set-state-in-effect */
   const unread = open ? 0 : messages.length - lastSeenCount;
 
   // FAB when collapsed
@@ -98,10 +104,23 @@ export function FloatingChat() {
       <button
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
-        style={{ background: "rgba(255, 255, 255, 0.12)", boxShadow: "0 0 20px rgba(255, 255, 255, 0.08)", border: "1px solid rgba(91, 245, 160, 0.35)" }}
+        style={{
+          background: "rgba(255, 255, 255, 0.12)",
+          boxShadow: "0 0 20px rgba(255, 255, 255, 0.08)",
+          border: "1px solid rgba(91, 245, 160, 0.35)",
+        }}
       >
         {/* Chat icon */}
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
         </svg>
         {unread > 0 && (
@@ -126,16 +145,35 @@ export function FloatingChat() {
       }}
     >
       {/* Glass container */}
-      <div className="flex flex-col w-full h-full rounded-xl overflow-hidden" style={{ background: "rgba(18, 18, 28, 0.45)", border: "1px solid rgba(91, 245, 160, 0.3)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)", backdropFilter: "blur(24px) saturate(1.2)", WebkitBackdropFilter: "blur(24px) saturate(1.2)" }}>
+      <div
+        className="flex flex-col w-full h-full rounded-xl overflow-hidden"
+        style={{
+          background: "rgba(18, 18, 28, 0.45)",
+          border: "1px solid rgba(91, 245, 160, 0.3)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+          backdropFilter: "blur(24px) saturate(1.2)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.2)",
+        }}
+      >
         {/* Draggable header */}
         <div
           onMouseDown={onDragStart}
           className={`flex items-center justify-between shrink-0 select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
-          style={{ padding: "14px 20px", borderBottom: "1px solid rgba(91, 245, 160, 0.25)", background: "rgba(10, 10, 16, 0.5)" }}
+          style={{
+            padding: "14px 20px",
+            borderBottom: "1px solid rgba(91, 245, 160, 0.25)",
+            background: "rgba(10, 10, 16, 0.5)",
+          }}
         >
           <div className="flex items-center gap-2.5">
-            <div className="w-2 h-2 rounded-full" style={{ background: "#a78bfa", boxShadow: "0 0 6px rgba(167, 139, 250, 0.4)" }} />
-            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "rgba(255, 255, 255, 0.6)" }}>
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ background: "#a78bfa", boxShadow: "0 0 6px rgba(167, 139, 250, 0.4)" }}
+            />
+            <span
+              className="text-xs font-semibold tracking-widest uppercase"
+              style={{ color: "rgba(255, 255, 255, 0.6)" }}
+            >
               Chat
             </span>
           </div>
@@ -146,16 +184,30 @@ export function FloatingChat() {
             onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.7)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.3)")}
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <line x1="2" y1="12" x2="12" y2="12" />
             </svg>
           </button>
         </div>
 
         {/* Messages area */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto flex flex-col gap-3" style={{ padding: "16px 20px" }}>
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto flex flex-col gap-3"
+          style={{ padding: "16px 20px" }}
+        >
           {messages.length === 0 && (
-            <div className="text-center mt-8 italic" style={{ color: "rgba(255, 255, 255, 0.3)", fontSize: 13 }}>
+            <div
+              className="text-center mt-8 italic"
+              style={{ color: "rgba(255, 255, 255, 0.3)", fontSize: 13 }}
+            >
               Send a message to begin.
             </div>
           )}
@@ -165,7 +217,10 @@ export function FloatingChat() {
           ))}
 
           {isTyping && (
-            <div className="self-start italic" style={{ color: "#a78bfa", fontSize: 12, padding: "4px 12px" }}>
+            <div
+              className="self-start italic"
+              style={{ color: "#a78bfa", fontSize: 12, padding: "4px 12px" }}
+            >
               Sentient is thinking
               <span className="inline-block animate-[blink_1.4s_infinite]">.</span>
               <span className="inline-block animate-[blink_1.4s_infinite_0.2s]">.</span>
@@ -175,7 +230,14 @@ export function FloatingChat() {
         </div>
 
         {/* Input area */}
-        <div className="flex items-center gap-3 shrink-0" style={{ padding: "12px 20px", borderTop: "1px solid rgba(91, 245, 160, 0.25)", background: "rgba(10, 10, 16, 0.5)" }}>
+        <div
+          className="flex items-center gap-3 shrink-0"
+          style={{
+            padding: "12px 20px",
+            borderTop: "1px solid rgba(91, 245, 160, 0.25)",
+            background: "rgba(10, 10, 16, 0.5)",
+          }}
+        >
           <input
             ref={inputRef}
             type="text"
@@ -184,13 +246,19 @@ export function FloatingChat() {
             onKeyDown={handleKeyDown}
             placeholder="Message the brain..."
             className="flex-1 bg-transparent border-none outline-none text-sm font-[inherit]"
-            style={{ color: "rgba(255, 255, 255, 0.9)", }}
+            style={{ color: "rgba(255, 255, 255, 0.9)" }}
           />
           <button
             onClick={handleSend}
             disabled={!text.trim()}
             className="text-[10px] font-bold tracking-widest uppercase rounded cursor-pointer disabled:opacity-30 disabled:cursor-default transition-all"
-            style={{ padding: "8px 16px", color: "#ffffff", border: "1px solid rgba(91, 245, 160, 0.6)", background: "rgba(91, 245, 160, 0.25)", fontWeight: 800 }}
+            style={{
+              padding: "8px 16px",
+              color: "#ffffff",
+              border: "1px solid rgba(91, 245, 160, 0.6)",
+              background: "rgba(91, 245, 160, 0.25)",
+              fontWeight: 800,
+            }}
           >
             SEND
           </button>

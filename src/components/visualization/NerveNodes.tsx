@@ -35,7 +35,7 @@ function SynapseBeam({ target }: { target: THREE.Vector3 }) {
     posAttr.setXYZ(1, target.x, target.y, target.z);
     posAttr.needsUpdate = true;
 
-    const progress = (Math.sin(t * 3) * 0.5 + 0.5);
+    const progress = Math.sin(t * 3) * 0.5 + 0.5;
     pulseRef.current.position.lerpVectors(origin, target, progress);
 
     const mat = pulseRef.current.material as THREE.MeshBasicMaterial;
@@ -44,6 +44,7 @@ function SynapseBeam({ target }: { target: THREE.Vector3 }) {
 
   return (
     <>
+      {/* @ts-expect-error R3F line element type mismatch */}
       <line ref={lineRef} geometry={geometry}>
         <lineBasicMaterial
           color="#5bf5a0"
@@ -95,7 +96,8 @@ function NerveNode({ name, position, score, status, isActive }: NerveNodeProps) 
     store.setSelectedNerve(name);
     store.setDetailsLoading(true);
     store.setSelectedNerveDetails(null);
-    getClient().getNerveDetails(name)
+    getClient()
+      .getNerveDetails(name)
       .then((details) => {
         useNeuralStore.getState().setSelectedNerveDetails(details);
         useNeuralStore.getState().setDetailsLoading(false);
@@ -146,17 +148,19 @@ function NerveNode({ name, position, score, status, isActive }: NerveNodeProps) 
 
       {/* Label — always visible, brighter on hover */}
       <Html center style={{ pointerEvents: "none" }}>
-        <div style={{
-          color: isActive ? "#5bf5a0" : hovered ? "#ffffff" : "rgba(255,255,255,0.55)",
-          fontSize: 11,
-          fontFamily: "SF Mono, Fira Code, monospace",
-          fontWeight: isActive ? 700 : 600,
-          whiteSpace: "nowrap",
-          textShadow: "0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.7)",
-          textAlign: "center",
-          transform: "translateY(-16px)",
-          cursor: "pointer",
-        }}>
+        <div
+          style={{
+            color: isActive ? "#5bf5a0" : hovered ? "#ffffff" : "rgba(255,255,255,0.55)",
+            fontSize: 11,
+            fontFamily: "SF Mono, Fira Code, monospace",
+            fontWeight: isActive ? 700 : 600,
+            whiteSpace: "nowrap",
+            textShadow: "0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.7)",
+            textAlign: "center",
+            transform: "translateY(-16px)",
+            cursor: "pointer",
+          }}
+        >
           {name}
         </div>
       </Html>
@@ -193,9 +197,7 @@ export function NerveNodes() {
 
   return (
     <group>
-      {activePos && (
-        <SynapseBeam target={new THREE.Vector3(...activePos)} />
-      )}
+      {activePos && <SynapseBeam target={new THREE.Vector3(...activePos)} />}
 
       {nerves.map((nerve, i) => (
         <NerveNode

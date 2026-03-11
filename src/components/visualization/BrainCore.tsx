@@ -167,7 +167,6 @@ export function BrainCore() {
     meshRef.current.scale.setScalar(breathe);
     meshRef.current.rotation.y += 0.001;
     meshRef.current.rotation.x = Math.sin(t * 0.2) * 0.08;
-
   });
 
   return (

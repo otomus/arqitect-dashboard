@@ -20,8 +20,7 @@ export const useSensesStore = create<SensesStore>((set) => ({
   sightSource: null,
 
   updateCalibration: (data) => set({ calibration: data }),
-  restoreConfig: (data) =>
-    set((state) => ({ configValues: { ...state.configValues, ...data } })),
+  restoreConfig: (data) => set((state) => ({ configValues: { ...state.configValues, ...data } })),
   setConfigValue: (key, value) =>
     set((state) => ({ configValues: { ...state.configValues, [key]: value } })),
   setSightFrame: (image, source) => set({ sightFrame: image, sightSource: source ?? null }),

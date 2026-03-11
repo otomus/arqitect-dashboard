@@ -1,6 +1,6 @@
 import { SentientClient, Channel } from "@otomus/sentient-sdk";
 import { useConnectionStore } from "../stores/connection";
-import { useNeuralStore } from "../stores/neural";
+import { useNeuralStore, type DreamStage } from "../stores/neural";
 import { useChatStore } from "../stores/chat";
 import { useReflexStore } from "../stores/reflex";
 import { useSensesStore } from "../stores/senses";
@@ -57,10 +57,19 @@ export function initClient(url: string): SentientClient {
 
   // Brain events
   const DREAM_STAGES = new Set([
-    "qualifying", "qualified", "qualification_failed", "qualification_error",
-    "reconciling", "reconciliation_start", "reconciliation_done",
-    "pruning", "finetuning", "finetuning_start", "finetuning_done",
-    "personality_reflection", "consolidation",
+    "qualifying",
+    "qualified",
+    "qualification_failed",
+    "qualification_error",
+    "reconciling",
+    "reconciliation_start",
+    "reconciliation_done",
+    "pruning",
+    "finetuning",
+    "finetuning_start",
+    "finetuning_done",
+    "personality_reflection",
+    "consolidation",
   ]);
 
   client.on(Channel.BRAIN_THOUGHT, (data) => {
@@ -69,13 +78,19 @@ export function initClient(url: string): SentientClient {
 
     if (DREAM_STAGES.has(stage)) {
       // Map to dream stage
-      const dreamStage = stage === "consolidation" || stage === "reconciliation_start" ? "reconciling"
-        : stage === "reconciliation_done" || stage === "finetuning_done" ? null
-        : stage === "finetuning_start" ? "finetuning"
-        : stage === "qualification_error" ? "qualification_failed"
-        : stage as any;
-      neural().setDream(dreamStage, data.nerve || null, data.message || null);
-      reflex().log("system", `[DREAM] ${data.message || stage}${data.nerve ? ` → ${data.nerve}` : ""}`);
+      const dreamStage =
+        stage === "consolidation" || stage === "reconciliation_start"
+          ? "reconciling"
+          : stage === "reconciliation_done" || stage === "finetuning_done"
+            ? null
+            : stage === "finetuning_start"
+              ? "finetuning"
+              : stage === "qualification_error"
+                ? "qualification_failed"
+                : (stage as NonNullable<DreamStage>);
+      const msg = (data as unknown as Record<string, string>).message;
+      neural().setDream(dreamStage, data.nerve || null, msg || null);
+      reflex().log("system", `[DREAM] ${msg || stage}${data.nerve ? ` → ${data.nerve}` : ""}`);
     } else {
       neural().setBrainState(stage === "responding" ? "responding" : "thinking");
       chat().setTyping(true);
@@ -132,7 +147,7 @@ export function initClient(url: string): SentientClient {
     neural().updateNerves(nerveList);
 
     // Auto-detect dream state from testing nerves
-    const testing = nerveList.filter((n: any) => n.status === "testing");
+    const testing = nerveList.filter((n: { status: string }) => n.status === "testing");
     if (testing.length > 0) {
       const current = neural().dreamStage;
       if (!current) {

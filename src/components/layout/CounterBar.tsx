@@ -34,11 +34,28 @@ function Counter({ label, value, color, onClick, sub }: CounterProps) {
         e.currentTarget.style.boxShadow = "none";
       }}
     >
-      <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 }}>
+      <div
+        style={{
+          color: "rgba(255,255,255,0.45)",
+          fontSize: 10,
+          fontWeight: 600,
+          letterSpacing: 1.5,
+          textTransform: "uppercase",
+          marginBottom: 6,
+        }}
+      >
         {label}
       </div>
       <div className="flex items-baseline gap-2">
-        <span style={{ color, fontSize: 24, fontWeight: 800, fontFamily: "SF Mono, Fira Code, monospace", lineHeight: 1 }}>
+        <span
+          style={{
+            color,
+            fontSize: 24,
+            fontWeight: 800,
+            fontFamily: "SF Mono, Fira Code, monospace",
+            lineHeight: 1,
+          }}
+        >
           {value}
         </span>
         {sub && (
@@ -73,33 +90,25 @@ export function CounterBar({ onNervesClick }: CounterBarProps) {
   };
 
   return (
-    <div
-      className="fixed z-30 flex items-center gap-3"
-      style={{ top: 80, left: 64, right: 64 }}
-    >
+    <div className="fixed z-30 flex items-center gap-3" style={{ top: 80, left: 64, right: 64 }}>
       <Counter
         label="Nerves"
         value={nerves.length}
         color="#5bf5a0"
         onClick={onNervesClick}
-        sub={passCount > 0 ? `${passCount} pass${failCount ? ` · ${failCount} fail` : ""}${testingCount ? ` · ${testingCount} testing` : ""}` : undefined}
+        sub={
+          passCount > 0
+            ? `${passCount} pass${failCount ? ` · ${failCount} fail` : ""}${testingCount ? ` · ${testingCount} testing` : ""}`
+            : undefined
+        }
       />
       <Counter
         label="Brain"
         value={brainState.toUpperCase()}
         color={stateColors[brainState] || "#555568"}
       />
-      <Counter
-        label="Episodes"
-        value={episodes.length}
-        color="#a78bfa"
-      />
-      <Counter
-        label="Events"
-        value={events.length}
-        color="#5bc8f5"
-        sub="last 100"
-      />
+      <Counter label="Episodes" value={episodes.length} color="#a78bfa" />
+      <Counter label="Events" value={events.length} color="#5bc8f5" sub="last 100" />
     </div>
   );
 }

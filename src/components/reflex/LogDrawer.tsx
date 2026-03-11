@@ -18,9 +18,23 @@ function LogLineRaw({ entry }: { entry: LogEntry }) {
   });
 
   return (
-    <div className="text-xs" style={{ padding: "3px 0", animation: "fade-in 0.2s ease", wordBreak: "break-word", overflowWrap: "break-word" }}>
+    <div
+      className="text-xs"
+      style={{
+        padding: "3px 0",
+        animation: "fade-in 0.2s ease",
+        wordBreak: "break-word",
+        overflowWrap: "break-word",
+      }}
+    >
       <span style={{ color: "rgba(255,255,255,0.25)", marginRight: 8, fontSize: 10 }}>{time}</span>
-      <span style={{ color: typeColors[entry.type] || "rgba(255,255,255,0.35)", marginRight: 6, fontSize: 10 }}>
+      <span
+        style={{
+          color: typeColors[entry.type] || "rgba(255,255,255,0.35)",
+          marginRight: 6,
+          fontSize: 10,
+        }}
+      >
         [{entry.type.toUpperCase()}]
       </span>
       <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 11 }}>{entry.text}</span>
@@ -97,7 +111,15 @@ export function LogDrawer() {
             style={{ padding: "12px 20px" }}
           >
             {logs.length === 0 && (
-              <div className="italic" style={{ color: "rgba(255,255,255,0.25)", fontSize: 13, marginTop: 32, textAlign: "center" }}>
+              <div
+                className="italic"
+                style={{
+                  color: "rgba(255,255,255,0.25)",
+                  fontSize: 13,
+                  marginTop: 32,
+                  textAlign: "center",
+                }}
+              >
                 Waiting for activity...
               </div>
             )}
