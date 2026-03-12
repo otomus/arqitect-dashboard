@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useMemoryStore } from "../memory";
+import type { MemoryState } from "@otomus/sentient-sdk";
 
 const initialState = {
   session: {},
@@ -7,6 +8,12 @@ const initialState = {
   episodes: [],
   facts: [],
 };
+
+function makeMemoryState(
+  overrides: Partial<Record<keyof MemoryState, unknown>> = {},
+): MemoryState {
+  return overrides as unknown as MemoryState;
+}
 
 describe("useMemoryStore", () => {
   beforeEach(() => {
@@ -23,12 +30,12 @@ describe("useMemoryStore", () => {
 
   describe("update", () => {
     it("sets all fields from data", () => {
-      const data = {
+      const data = makeMemoryState({
         session: { user: "alice" },
         conversation: [{ role: "user", content: "hi" }],
         episodes: [{ task: "greet", nerve: "chat", success: true }],
         facts: [{ key: "name", value: "Alice" }],
-      } as any;
+      });
 
       useMemoryStore.getState().update(data);
       const state = useMemoryStore.getState();
@@ -41,7 +48,7 @@ describe("useMemoryStore", () => {
     });
 
     it("defaults missing fields to empty object/array", () => {
-      useMemoryStore.getState().update({} as any);
+      useMemoryStore.getState().update(makeMemoryState());
       const state = useMemoryStore.getState();
       expect(state.session).toEqual({});
       expect(state.conversation).toEqual([]);
@@ -50,12 +57,14 @@ describe("useMemoryStore", () => {
     });
 
     it("handles null fields via nullish coalescing", () => {
-      useMemoryStore.getState().update({
-        session: null,
-        conversation: null,
-        episodes: null,
-        facts: null,
-      } as any);
+      useMemoryStore.getState().update(
+        makeMemoryState({
+          session: null,
+          conversation: null,
+          episodes: null,
+          facts: null,
+        }),
+      );
       const state = useMemoryStore.getState();
       expect(state.session).toEqual({});
       expect(state.conversation).toEqual([]);
@@ -64,19 +73,23 @@ describe("useMemoryStore", () => {
     });
 
     it("replaces previous state entirely", () => {
-      useMemoryStore.getState().update({
-        session: { a: "1" },
-        conversation: [{ role: "user", content: "hi" }],
-        episodes: [],
-        facts: [],
-      } as any);
+      useMemoryStore.getState().update(
+        makeMemoryState({
+          session: { a: "1" },
+          conversation: [{ role: "user", content: "hi" }],
+          episodes: [],
+          facts: [],
+        }),
+      );
 
-      useMemoryStore.getState().update({
-        session: { b: "2" },
-        conversation: [],
-        episodes: [{ task: "t", nerve: "n", success: false }],
-        facts: [],
-      } as any);
+      useMemoryStore.getState().update(
+        makeMemoryState({
+          session: { b: "2" },
+          conversation: [],
+          episodes: [{ task: "t", nerve: "n", success: false }],
+          facts: [],
+        }),
+      );
 
       const state = useMemoryStore.getState();
       expect(state.session).toEqual({ b: "2" });
@@ -87,12 +100,14 @@ describe("useMemoryStore", () => {
     });
 
     it("handles undefined fields via nullish coalescing", () => {
-      useMemoryStore.getState().update({
-        session: undefined,
-        conversation: undefined,
-        episodes: undefined,
-        facts: undefined,
-      } as any);
+      useMemoryStore.getState().update(
+        makeMemoryState({
+          session: undefined,
+          conversation: undefined,
+          episodes: undefined,
+          facts: undefined,
+        }),
+      );
       const state = useMemoryStore.getState();
       expect(state.session).toEqual({});
       expect(state.conversation).toEqual([]);

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useSensesStore } from "../senses";
+import type { SenseCalibration } from "@otomus/sentient-sdk";
 
 const initialState = {
   calibration: {},
@@ -7,6 +8,12 @@ const initialState = {
   sightFrame: null,
   sightSource: null,
 };
+
+function makeCalibration(
+  data: Record<string, Record<string, unknown>>,
+): Record<string, SenseCalibration> {
+  return data as unknown as Record<string, SenseCalibration>;
+}
 
 describe("useSensesStore", () => {
   beforeEach(() => {
@@ -23,7 +30,7 @@ describe("useSensesStore", () => {
 
   describe("updateCalibration", () => {
     it("sets calibration data", () => {
-      const data = { vision: { min: 0, max: 1 } } as any;
+      const data = makeCalibration({ vision: { min: 0, max: 1 } });
       useSensesStore.getState().updateCalibration(data);
       expect(useSensesStore.getState().calibration).toEqual(data);
     });
@@ -31,13 +38,15 @@ describe("useSensesStore", () => {
     it("replaces previous calibration entirely", () => {
       useSensesStore
         .getState()
-        .updateCalibration({ a: { min: 0 } } as any);
+        .updateCalibration(makeCalibration({ a: { min: 0 } }));
       useSensesStore
         .getState()
-        .updateCalibration({ b: { min: 1 } } as any);
+        .updateCalibration(makeCalibration({ b: { min: 1 } }));
       const cal = useSensesStore.getState().calibration;
       expect(cal).toEqual({ b: { min: 1 } });
-      expect((cal as any).a).toBeUndefined();
+      expect(
+        (cal as unknown as Record<string, unknown>).a,
+      ).toBeUndefined();
     });
   });
 

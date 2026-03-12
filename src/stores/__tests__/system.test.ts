@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useSystemStore } from "../system";
+import type { SystemStats } from "@otomus/sentient-sdk";
+
+function makeStats(data: Record<string, unknown>): SystemStats {
+  return data as unknown as SystemStats;
+}
 
 describe("useSystemStore", () => {
   beforeEach(() => {
@@ -12,24 +17,24 @@ describe("useSystemStore", () => {
 
   describe("update", () => {
     it("sets stats", () => {
-      const stats = { cpu: 50, memory: 1024, uptime: 3600 } as any;
+      const stats = makeStats({ cpu: 50, memory: 1024, uptime: 3600 });
       useSystemStore.getState().update(stats);
       expect(useSystemStore.getState().stats).toEqual(stats);
     });
 
     it("replaces previous stats", () => {
-      useSystemStore.getState().update({ cpu: 10 } as any);
-      useSystemStore.getState().update({ cpu: 90 } as any);
+      useSystemStore.getState().update(makeStats({ cpu: 10 }));
+      useSystemStore.getState().update(makeStats({ cpu: 90 }));
       expect(useSystemStore.getState().stats).toEqual({ cpu: 90 });
     });
 
     it("can set complex stats objects", () => {
-      const stats = {
+      const stats = makeStats({
         cpu: 75,
         memory: 2048,
         uptime: 7200,
         processes: [{ name: "brain", pid: 1 }],
-      } as any;
+      });
       useSystemStore.getState().update(stats);
       expect(useSystemStore.getState().stats).toEqual(stats);
     });

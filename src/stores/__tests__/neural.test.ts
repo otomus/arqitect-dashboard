@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useNeuralStore } from "../neural";
+import type { NerveStatus, NerveDetails } from "@otomus/sentient-sdk";
 
 const initialState = {
   nerves: [],
@@ -13,6 +14,18 @@ const initialState = {
   dreamNerve: null,
   dreamMessage: null,
 };
+
+function makeNerveStatus(
+  overrides: Record<string, unknown>,
+): NerveStatus {
+  return overrides as unknown as NerveStatus;
+}
+
+function makeNerveDetails(
+  overrides: Record<string, unknown>,
+): NerveDetails {
+  return overrides as unknown as NerveDetails;
+}
 
 describe("useNeuralStore", () => {
   beforeEach(() => {
@@ -35,19 +48,25 @@ describe("useNeuralStore", () => {
 
   describe("updateNerves", () => {
     it("sets nerves array", () => {
-      const nerves = [{ name: "vision", status: "active" }] as any;
+      const nerves = [makeNerveStatus({ name: "vision", status: "active" })];
       useNeuralStore.getState().updateNerves(nerves);
       expect(useNeuralStore.getState().nerves).toEqual(nerves);
     });
 
     it("replaces existing nerves", () => {
-      useNeuralStore.getState().updateNerves([{ name: "a" }] as any);
-      useNeuralStore.getState().updateNerves([{ name: "b" }] as any);
+      useNeuralStore
+        .getState()
+        .updateNerves([makeNerveStatus({ name: "a" })]);
+      useNeuralStore
+        .getState()
+        .updateNerves([makeNerveStatus({ name: "b" })]);
       expect(useNeuralStore.getState().nerves).toEqual([{ name: "b" }]);
     });
 
     it("can set to empty array", () => {
-      useNeuralStore.getState().updateNerves([{ name: "a" }] as any);
+      useNeuralStore
+        .getState()
+        .updateNerves([makeNerveStatus({ name: "a" })]);
       useNeuralStore.getState().updateNerves([]);
       expect(useNeuralStore.getState().nerves).toEqual([]);
     });
@@ -138,7 +157,7 @@ describe("useNeuralStore", () => {
 
   describe("setSelectedNerveDetails", () => {
     it("sets selectedNerveDetails", () => {
-      const details = { name: "vision", config: {} } as any;
+      const details = makeNerveDetails({ name: "vision", config: {} });
       useNeuralStore.getState().setSelectedNerveDetails(details);
       expect(useNeuralStore.getState().selectedNerveDetails).toEqual(details);
     });
@@ -146,7 +165,7 @@ describe("useNeuralStore", () => {
     it("clears with null", () => {
       useNeuralStore
         .getState()
-        .setSelectedNerveDetails({ name: "x" } as any);
+        .setSelectedNerveDetails(makeNerveDetails({ name: "x" }));
       useNeuralStore.getState().setSelectedNerveDetails(null);
       expect(useNeuralStore.getState().selectedNerveDetails).toBeNull();
     });

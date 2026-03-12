@@ -1,13 +1,17 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useChatStore } from "../chat";
+import type { SentientEnvelope } from "@otomus/sentient-sdk";
 
 const initialState = {
   messages: [] as [],
   isTyping: false,
 };
 
-function makeEnvelope(text: string, media?: Record<string, unknown>) {
-  return { content: { text }, media } as any;
+function makeEnvelope(
+  text: string,
+  media?: Record<string, unknown>,
+): SentientEnvelope {
+  return { content: { text }, media } as unknown as SentientEnvelope;
 }
 
 describe("useChatStore", () => {
