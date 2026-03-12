@@ -1,0 +1,42 @@
+name: Publish @otomus/create-sentient-dashboard
+
+on:
+  push:
+    tags:
+      - "create-sentient-dashboard@*"
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: rm -f package-lock.json && npm install
+
+      - name: Test
+        run: npm test
+
+      - name: Build dashboard
+        run: npm run build
+
+      - name: Publish
+        working-directory: packages/create-sentient-dashboard
+        run: |
+          npm run prepack
+          npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
