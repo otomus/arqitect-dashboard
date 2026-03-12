@@ -100,7 +100,7 @@ describe("useChatStore", () => {
       useChatStore.getState().appendAudioToLast("base64data", "audio/mp3");
 
       const msg = useChatStore.getState().messages[0];
-      expect(msg.envelope!.media.audio).toEqual({
+      expect(msg.envelope!.media!.audio).toEqual({
         data: "base64data",
         mime: "audio/mp3",
       });
@@ -113,7 +113,7 @@ describe("useChatStore", () => {
 
       const messages = useChatStore.getState().messages;
       expect(messages[0].envelope!.media).toBeUndefined();
-      expect(messages[1].envelope!.media.audio).toEqual({
+      expect(messages[1].envelope!.media!.audio).toEqual({
         data: "audio2",
         mime: "audio/wav",
       });
@@ -125,7 +125,7 @@ describe("useChatStore", () => {
       useChatStore.getState().appendAudioToLast("audiodata", "audio/ogg");
 
       const messages = useChatStore.getState().messages;
-      expect(messages[0].envelope!.media.audio).toEqual({
+      expect(messages[0].envelope!.media!.audio).toEqual({
         data: "audiodata",
         mime: "audio/ogg",
       });
