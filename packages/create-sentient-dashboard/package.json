@@ -1,6 +1,6 @@
 {
   "name": "@otomus/create-sentient-dashboard",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Scaffold a sentient-dashboard instance configured to connect to your sentient-core server",
   "author": "otomus",
   "license": "MIT",
