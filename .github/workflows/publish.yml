@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.version_check.outputs.changed == 'true'
-        run: npm ci
+        run: rm -f package-lock.json && npm install
 
       - name: Run full check
         if: steps.version_check.outputs.changed == 'true'
