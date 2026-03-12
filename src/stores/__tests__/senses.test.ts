@@ -36,17 +36,11 @@ describe("useSensesStore", () => {
     });
 
     it("replaces previous calibration entirely", () => {
-      useSensesStore
-        .getState()
-        .updateCalibration(makeCalibration({ a: { min: 0 } }));
-      useSensesStore
-        .getState()
-        .updateCalibration(makeCalibration({ b: { min: 1 } }));
+      useSensesStore.getState().updateCalibration(makeCalibration({ a: { min: 0 } }));
+      useSensesStore.getState().updateCalibration(makeCalibration({ b: { min: 1 } }));
       const cal = useSensesStore.getState().calibration;
       expect(cal).toEqual({ b: { min: 1 } });
-      expect(
-        (cal as unknown as Record<string, unknown>).a,
-      ).toBeUndefined();
+      expect((cal as unknown as Record<string, unknown>).a).toBeUndefined();
     });
   });
 

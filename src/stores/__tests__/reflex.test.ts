@@ -33,14 +33,7 @@ describe("useReflexStore", () => {
     });
 
     it("supports all log types", () => {
-      const types = [
-        "thought",
-        "action",
-        "result",
-        "tool",
-        "system",
-        "error",
-      ] as const;
+      const types = ["thought", "action", "result", "tool", "system", "error"] as const;
       for (const type of types) {
         useReflexStore.getState().log(type, `test-${type}`);
       }

@@ -15,15 +15,11 @@ const initialState = {
   dreamMessage: null,
 };
 
-function makeNerveStatus(
-  overrides: Record<string, unknown>,
-): NerveStatus {
+function makeNerveStatus(overrides: Record<string, unknown>): NerveStatus {
   return overrides as unknown as NerveStatus;
 }
 
-function makeNerveDetails(
-  overrides: Record<string, unknown>,
-): NerveDetails {
+function makeNerveDetails(overrides: Record<string, unknown>): NerveDetails {
   return overrides as unknown as NerveDetails;
 }
 
@@ -54,19 +50,13 @@ describe("useNeuralStore", () => {
     });
 
     it("replaces existing nerves", () => {
-      useNeuralStore
-        .getState()
-        .updateNerves([makeNerveStatus({ name: "a" })]);
-      useNeuralStore
-        .getState()
-        .updateNerves([makeNerveStatus({ name: "b" })]);
+      useNeuralStore.getState().updateNerves([makeNerveStatus({ name: "a" })]);
+      useNeuralStore.getState().updateNerves([makeNerveStatus({ name: "b" })]);
       expect(useNeuralStore.getState().nerves).toEqual([{ name: "b" }]);
     });
 
     it("can set to empty array", () => {
-      useNeuralStore
-        .getState()
-        .updateNerves([makeNerveStatus({ name: "a" })]);
+      useNeuralStore.getState().updateNerves([makeNerveStatus({ name: "a" })]);
       useNeuralStore.getState().updateNerves([]);
       expect(useNeuralStore.getState().nerves).toEqual([]);
     });
@@ -83,9 +73,7 @@ describe("useNeuralStore", () => {
     });
 
     it("preserves optional nerve and stage fields", () => {
-      useNeuralStore
-        .getState()
-        .addEvent({ type: "action", nerve: "vision", stage: "processing" });
+      useNeuralStore.getState().addEvent({ type: "action", nerve: "vision", stage: "processing" });
       const event = useNeuralStore.getState().events[0];
       expect(event.nerve).toBe("vision");
       expect(event.stage).toBe("processing");
@@ -163,9 +151,7 @@ describe("useNeuralStore", () => {
     });
 
     it("clears with null", () => {
-      useNeuralStore
-        .getState()
-        .setSelectedNerveDetails(makeNerveDetails({ name: "x" }));
+      useNeuralStore.getState().setSelectedNerveDetails(makeNerveDetails({ name: "x" }));
       useNeuralStore.getState().setSelectedNerveDetails(null);
       expect(useNeuralStore.getState().selectedNerveDetails).toBeNull();
     });
@@ -212,9 +198,7 @@ describe("useNeuralStore", () => {
     });
 
     it("defaults nerve and message to null when not provided", () => {
-      useNeuralStore
-        .getState()
-        .setDream("finetuning", "nerve1", "msg1");
+      useNeuralStore.getState().setDream("finetuning", "nerve1", "msg1");
       useNeuralStore.getState().setDream("pruning");
       const state = useNeuralStore.getState();
       expect(state.dreamStage).toBe("pruning");
@@ -223,9 +207,7 @@ describe("useNeuralStore", () => {
     });
 
     it("clears dream with null stage", () => {
-      useNeuralStore
-        .getState()
-        .setDream("qualifying", "nerve", "msg");
+      useNeuralStore.getState().setDream("qualifying", "nerve", "msg");
       useNeuralStore.getState().setDream(null);
       const state = useNeuralStore.getState();
       expect(state.dreamStage).toBeNull();

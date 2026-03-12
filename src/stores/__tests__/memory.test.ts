@@ -9,9 +9,7 @@ const initialState = {
   facts: [],
 };
 
-function makeMemoryState(
-  overrides: Partial<Record<keyof MemoryState, unknown>> = {},
-): MemoryState {
+function makeMemoryState(overrides: Partial<Record<keyof MemoryState, unknown>> = {}): MemoryState {
   return overrides as unknown as MemoryState;
 }
 
@@ -41,9 +39,7 @@ describe("useMemoryStore", () => {
       const state = useMemoryStore.getState();
       expect(state.session).toEqual({ user: "alice" });
       expect(state.conversation).toEqual([{ role: "user", content: "hi" }]);
-      expect(state.episodes).toEqual([
-        { task: "greet", nerve: "chat", success: true },
-      ]);
+      expect(state.episodes).toEqual([{ task: "greet", nerve: "chat", success: true }]);
       expect(state.facts).toEqual([{ key: "name", value: "Alice" }]);
     });
 
@@ -94,9 +90,7 @@ describe("useMemoryStore", () => {
       const state = useMemoryStore.getState();
       expect(state.session).toEqual({ b: "2" });
       expect(state.conversation).toEqual([]);
-      expect(state.episodes).toEqual([
-        { task: "t", nerve: "n", success: false },
-      ]);
+      expect(state.episodes).toEqual([{ task: "t", nerve: "n", success: false }]);
     });
 
     it("handles undefined fields via nullish coalescing", () => {

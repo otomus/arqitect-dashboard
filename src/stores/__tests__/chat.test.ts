@@ -7,10 +7,7 @@ const initialState = {
   isTyping: false,
 };
 
-function makeEnvelope(
-  text: string,
-  media?: Record<string, unknown>,
-): SentientEnvelope {
+function makeEnvelope(text: string, media?: Record<string, unknown>): SentientEnvelope {
   return { content: { text }, media } as unknown as SentientEnvelope;
 }
 
