@@ -6,10 +6,76 @@ on:
       - "create-sentient-dashboard@*"
 
 jobs:
+  check:
+    name: Lint, Test, Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: rm -f package-lock.json && npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Build
+        run: |
+          rm -f package-lock.json && npm install
+          npm run build
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+
   publish:
     name: Publish to npm
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: [check, codeql]
 
     permissions:
       contents: read
@@ -26,9 +92,6 @@ jobs:
 
       - name: Install dependencies
         run: rm -f package-lock.json && npm install
-
-      - name: Test
-        run: npm test
 
       - name: Build dashboard
         run: npm run build
