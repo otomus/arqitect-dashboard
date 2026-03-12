@@ -12,11 +12,21 @@ let client: SentientClient | null = null;
 // Track tasks we sent ourselves so we don't double-show them
 const sentTasks = new Set<string>();
 
+/**
+ * Returns the singleton SentientClient instance.
+ * @throws {Error} If {@link initClient} has not been called yet.
+ */
 export function getClient(): SentientClient {
   if (!client) throw new Error("Client not initialized. Call initClient() first.");
   return client;
 }
 
+/**
+ * Creates and connects the singleton SentientClient, wiring all channel listeners
+ * to the corresponding Zustand stores. No-ops if already initialized.
+ * @param url - WebSocket URL to the sentient-core server (e.g. "ws://host:4000").
+ * @returns The connected SentientClient instance.
+ */
 export function initClient(url: string): SentientClient {
   if (client) return client;
 
@@ -205,6 +215,11 @@ export function initClient(url: string): SentientClient {
   return client;
 }
 
+/**
+ * Sends a task to the agent and records it locally so the returning
+ * BRAIN_TASK echo is not duplicated in the chat history.
+ * @param text - The task/message text to send.
+ */
 export function sendTask(text: string) {
   sentTasks.add(text);
   getClient().send(text);

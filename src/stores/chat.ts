@@ -1,6 +1,15 @@
 import { create } from "zustand";
 import type { SentientEnvelope } from "@otomus/sentient-sdk";
 
+/**
+ * A single message in the chat history.
+ * @property id - Auto-incrementing unique identifier (e.g. "msg-1").
+ * @property role - Whether the message is from the user or the assistant.
+ * @property text - Plain-text content of the message.
+ * @property envelope - Full SDK envelope for assistant messages (contains media, metadata).
+ * @property source - Origin client identifier (e.g. "dashboard", "telegram").
+ * @property timestamp - Unix epoch milliseconds when the message was created.
+ */
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -22,6 +31,10 @@ interface ChatStore {
 
 let msgCounter = 0;
 
+/**
+ * Zustand store managing chat messages and typing indicator.
+ * Supports user and assistant messages, and appending audio to the last assistant response.
+ */
 export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
   isTyping: false,

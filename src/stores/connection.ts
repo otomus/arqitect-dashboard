@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+/** WebSocket connection lifecycle status. */
 type Status = "connecting" | "online" | "offline" | "killed";
 
 interface ConnectionStore {
@@ -11,6 +12,10 @@ interface ConnectionStore {
   setKilled: () => void;
 }
 
+/**
+ * Zustand store tracking the WebSocket connection status and reconnect attempts.
+ * Used by the header and other UI elements to display connectivity state.
+ */
 export const useConnectionStore = create<ConnectionStore>((set) => ({
   status: "connecting",
   reconnectAttempt: 0,

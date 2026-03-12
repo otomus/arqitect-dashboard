@@ -9,12 +9,22 @@ import { NerveDetail } from "./components/nerves/NerveDetail";
 import { NervesPanel } from "./components/nerves/NervesPanel";
 import { DreamPanel } from "./components/nerves/DreamPanel";
 
+/**
+ * Root application component. Initializes the WebSocket connection on mount
+ * and renders the synthwave dashboard layout: brain visualization, header,
+ * counters, chat, log drawer, nerves panel, nerve detail modal, and dream panel.
+ */
 export default function App() {
   const [nervesOpen, setNervesOpen] = useState(false);
 
   useEffect(() => {
+    const serverAddress = import.meta.env.VITE_SERVER_ADDRESS;
+    if (!serverAddress) {
+      console.error("VITE_SERVER_ADDRESS is not set — cannot connect to sentient-core server");
+      return;
+    }
     const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${proto}//localhost:3000`;
+    const wsUrl = `${proto}//${serverAddress}`;
     initClient(wsUrl);
   }, []);
 

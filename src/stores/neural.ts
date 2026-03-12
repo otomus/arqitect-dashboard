@@ -1,6 +1,14 @@
 import { create } from "zustand";
 import type { NerveStatus, NerveDetails } from "@otomus/sentient-sdk";
 
+/**
+ * A discrete event in the neural processing pipeline.
+ * @property id - Auto-incrementing identifier (e.g. "evt-7").
+ * @property type - The kind of neural event.
+ * @property nerve - Name of the nerve involved, if any.
+ * @property stage - Processing stage label (e.g. "qualifying", "responding").
+ * @property timestamp - Unix epoch milliseconds.
+ */
 export interface NeuralEvent {
   id: string;
   type: "thought" | "action" | "result" | "response";
@@ -9,6 +17,7 @@ export interface NeuralEvent {
   timestamp: number;
 }
 
+/** Current stage of the dream (background consolidation) lifecycle, or null when not dreaming. */
 export type DreamStage =
   | "qualifying"
   | "qualified"
@@ -43,6 +52,10 @@ interface NeuralStore {
 
 let eventCounter = 0;
 
+/**
+ * Zustand store for neural state: nerves, events, brain activity, and dream stage.
+ * Keeps the most recent 100 events, automatically discarding older ones on each append.
+ */
 export const useNeuralStore = create<NeuralStore>((set) => ({
   nerves: [],
   events: [],

@@ -6,6 +6,7 @@ interface SystemStore {
   update: (stats: SystemStats) => void;
 }
 
+/** Zustand store for system-level stats (CPU, memory, uptime, etc.) from the agent process. */
 export const useSystemStore = create<SystemStore>((set) => ({
   stats: null,
   update: (stats) => set({ stats }),

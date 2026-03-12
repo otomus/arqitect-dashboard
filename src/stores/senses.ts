@@ -13,6 +13,10 @@ interface SensesStore {
   setSightFrame: (image: string, source?: string) => void;
 }
 
+/**
+ * Zustand store for sense calibration, configuration, and sight (camera) frames.
+ * Receives updates from SENSE_STATUS, SENSE_SAVED_CONFIG, and SENSE_SIGHT_FRAME channels.
+ */
 export const useSensesStore = create<SensesStore>((set) => ({
   calibration: {},
   configValues: {},
