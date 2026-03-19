@@ -1,6 +1,6 @@
 {
   "name": "@otomus/create-arqitect-dashboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scaffold an arqitect-dashboard instance configured to connect to your arqitect-core server",
   "author": "otomus",
   "license": "MIT",
