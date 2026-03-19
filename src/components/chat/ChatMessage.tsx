@@ -35,16 +35,18 @@ function ChatMessageRaw({ message }: Props) {
       </div>
 
       {/* Text content */}
-      <div
-        style={{ color: "rgba(255, 255, 255, 0.88)" }}
-        className="[&_strong]:text-white [&_em]:italic [&_code]:bg-white/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-xs"
-      >
-        {envelope?.content.markdown ? (
-          <ReactMarkdown>{message.text}</ReactMarkdown>
-        ) : (
-          <span>{message.text}</span>
-        )}
-      </div>
+      {message.text && (
+        <div
+          style={{ color: "rgba(255, 255, 255, 0.88)" }}
+          className="[&_strong]:text-white [&_em]:italic [&_code]:bg-white/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-xs"
+        >
+          {envelope?.content.markdown ? (
+            <ReactMarkdown>{message.text}</ReactMarkdown>
+          ) : (
+            <span>{message.text}</span>
+          )}
+        </div>
+      )}
 
       {/* GIF */}
       {envelope?.media?.gifUrl && (

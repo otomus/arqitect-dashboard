@@ -318,11 +318,25 @@ interface EnvelopeContent {
 
 interface EnvelopeLike {
   content: EnvelopeContent;
+  rich?: Record<string, unknown>;
 }
 
 /**
- * Server sometimes wraps text in `{"format":"text","response":"..."}`.
- * Detects and unwraps so chat shows the actual text.
+ * Checks whether `value` looks like a Card object (`{ title, body }`).
+ */
+function isCardPayload(value: unknown): value is { title: string; body: string; footer?: string } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as Record<string, unknown>).title === "string" &&
+    typeof (value as Record<string, unknown>).body === "string"
+  );
+}
+
+/**
+ * Server sometimes wraps text in `{"format":"text","response":"..."}` or sends
+ * card data as JSON inside `content.text`. Detects and unwraps so chat renders
+ * structured content instead of raw JSON.
  */
 function unwrapJsonResponse<T extends EnvelopeLike>(envelope: T): T {
   const text = envelope.content.text;
@@ -330,8 +344,19 @@ function unwrapJsonResponse<T extends EnvelopeLike>(envelope: T): T {
 
   try {
     const parsed = JSON.parse(text) as Record<string, unknown>;
-    if (typeof parsed.response === "string") {
+
+    // Case 1: The entire text is a card object (has title + body at top level)
+    if (isCardPayload(parsed) && !parsed.response) {
       return {
+        ...envelope,
+        content: { ...envelope.content, text: "" },
+        rich: { ...((envelope.rich as Record<string, unknown>) ?? {}), card: parsed },
+      };
+    }
+
+    // Case 2: JSON wrapper with response text, possibly including a card
+    if (typeof parsed.response === "string") {
+      const result: T = {
         ...envelope,
         content: {
           ...envelope.content,
@@ -339,6 +364,10 @@ function unwrapJsonResponse<T extends EnvelopeLike>(envelope: T): T {
           markdown: envelope.content.markdown || parsed.format === "markdown",
         },
       };
+      if (isCardPayload(parsed.card)) {
+        result.rich = { ...((envelope.rich as Record<string, unknown>) ?? {}), card: parsed.card };
+      }
+      return result;
     }
   } catch {
     // Not JSON — use as-is
