@@ -65,10 +65,12 @@ function ArqitectLogo() {
 
 interface HeaderProps {
   onConnect: (address: string) => void;
+  /** Extra top offset in pixels (e.g. to sit below a WIP banner). */
+  topOffset?: number;
 }
 
 /** Top navigation bar with animated ARQITECT logo, connection status, and settings cog. */
-export function Header({ onConnect }: HeaderProps) {
+export function Header({ onConnect, topOffset = 0 }: HeaderProps) {
   const status = useConnectionStore((s) => s.status);
   const dreamStage = useNeuralStore((s) => s.dreamStage);
 
@@ -87,8 +89,9 @@ export function Header({ onConnect }: HeaderProps) {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-2 backdrop-blur-md"
+      className="fixed left-0 right-0 z-50 flex items-center justify-between py-2 backdrop-blur-md"
       style={{
+        top: topOffset,
         paddingLeft: 64,
         paddingRight: 64,
         paddingTop: 16,

@@ -10,6 +10,7 @@ import { NerveDetail } from "./components/nerves/NerveDetail";
 import { NervesPanel } from "./components/nerves/NervesPanel";
 import { DreamPanel } from "./components/nerves/DreamPanel";
 import { PerfMonitor } from "./components/layout/PerfMonitor";
+import { WipBanner, WIP_BANNER_HEIGHT } from "./components/layout/WipBanner";
 
 /**
  * Converts a server address into a WebSocket URL.
@@ -48,11 +49,14 @@ export default function App() {
 
   return (
     <>
+      {/* WIP banner — matches arqitect-community site */}
+      <WipBanner />
+
       {/* 2D SVG Tron disc — center stage */}
       <Brain2D />
 
-      {/* Header bar with settings cog */}
-      <Header onConnect={connectToServer} />
+      {/* Header bar with settings cog, offset below banner */}
+      <Header onConnect={connectToServer} topOffset={WIP_BANNER_HEIGHT} />
 
       {/* Counter widgets under header */}
       <CounterBar onNervesClick={() => setNervesOpen(true)} />
