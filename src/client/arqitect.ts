@@ -324,13 +324,23 @@ interface EnvelopeLike {
 /**
  * Checks whether `value` looks like a Card object (`{ title, body }`).
  */
-function isCardPayload(value: unknown): value is { title: string; body: string; footer?: string } {
+function isCardPayload(value: unknown): boolean {
   return (
     typeof value === "object" &&
     value !== null &&
     typeof (value as Record<string, unknown>).title === "string" &&
     typeof (value as Record<string, unknown>).body === "string"
   );
+}
+
+/**
+ * Merges a card into the envelope's `rich` field, preserving existing rich data.
+ */
+function withCard<T extends EnvelopeLike>(envelope: T, card: unknown): T {
+  return {
+    ...envelope,
+    rich: { ...((envelope.rich as Record<string, unknown>) ?? {}), card },
+  };
 }
 
 /**
@@ -347,25 +357,24 @@ function unwrapJsonResponse<T extends EnvelopeLike>(envelope: T): T {
 
     // Case 1: The entire text is a card object (has title + body at top level)
     if (isCardPayload(parsed) && !parsed.response) {
-      return {
-        ...envelope,
-        content: { ...envelope.content, text: "" },
-        rich: { ...((envelope.rich as Record<string, unknown>) ?? {}), card: parsed },
-      };
+      return withCard(
+        { ...envelope, content: { ...envelope.content, text: "" } },
+        parsed,
+      );
     }
 
     // Case 2: JSON wrapper with response text, possibly including a card
     if (typeof parsed.response === "string") {
-      const result: T = {
+      let result: T = {
         ...envelope,
         content: {
           ...envelope.content,
-          text: parsed.response,
+          text: parsed.response as string,
           markdown: envelope.content.markdown || parsed.format === "markdown",
         },
       };
       if (isCardPayload(parsed.card)) {
-        result.rich = { ...((envelope.rich as Record<string, unknown>) ?? {}), card: parsed.card };
+        result = withCard(result, parsed.card);
       }
       return result;
     }
