@@ -1,4 +1,5 @@
 import { ArqitectClient, Channel } from "@otomus/arqitect-sdk";
+import type { ArqitectEnvelope, Card } from "@otomus/arqitect-sdk";
 import { useConnectionStore } from "../stores/connection";
 import { useNeuralStore, type DreamStage } from "../stores/neural";
 import { useChatStore } from "../stores/chat";
@@ -311,16 +312,6 @@ function registerCatchAllHandler(c: ArqitectClient, { reflex }: StoreAccessors):
 // JSON response unwrapping
 // ────────────────────────────────────────────
 
-interface EnvelopeContent {
-  text: string;
-  markdown?: boolean;
-}
-
-interface EnvelopeLike {
-  content: EnvelopeContent;
-  rich?: Record<string, unknown>;
-}
-
 /**
  * Checks whether `value` looks like a Card object (`{ title, body }`).
  */
@@ -334,21 +325,11 @@ function isCardPayload(value: unknown): boolean {
 }
 
 /**
- * Merges a card into the envelope's `rich` field, preserving existing rich data.
- */
-function withCard<T extends EnvelopeLike>(envelope: T, card: unknown): T {
-  return {
-    ...envelope,
-    rich: { ...((envelope.rich as Record<string, unknown>) ?? {}), card },
-  };
-}
-
-/**
  * Server sometimes wraps text in `{"format":"text","response":"..."}` or sends
  * card data as JSON inside `content.text`. Detects and unwraps so chat renders
  * structured content instead of raw JSON.
  */
-function unwrapJsonResponse<T extends EnvelopeLike>(envelope: T): T {
+function unwrapJsonResponse(envelope: ArqitectEnvelope): ArqitectEnvelope {
   const text = envelope.content.text;
   if (!text || !text.startsWith("{")) return envelope;
 
@@ -357,24 +338,25 @@ function unwrapJsonResponse<T extends EnvelopeLike>(envelope: T): T {
 
     // Case 1: The entire text is a card object (has title + body at top level)
     if (isCardPayload(parsed) && !parsed.response) {
-      return withCard(
-        { ...envelope, content: { ...envelope.content, text: "" } },
-        parsed,
-      );
+      return {
+        ...envelope,
+        content: { ...envelope.content, text: "" },
+        rich: { ...envelope.rich, card: parsed as unknown as Card },
+      };
     }
 
     // Case 2: JSON wrapper with response text, possibly including a card
     if (typeof parsed.response === "string") {
-      let result: T = {
+      const result: ArqitectEnvelope = {
         ...envelope,
         content: {
           ...envelope.content,
-          text: parsed.response as string,
+          text: parsed.response,
           markdown: envelope.content.markdown || parsed.format === "markdown",
         },
       };
       if (isCardPayload(parsed.card)) {
-        result = withCard(result, parsed.card);
+        result.rich = { ...envelope.rich, card: parsed.card as Card };
       }
       return result;
     }
